@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# 'data' folder #
+data/
+
+# 'playbook' for rough code planning and snippets
+playbook/
