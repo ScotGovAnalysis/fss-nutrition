@@ -1,1 +1,1 @@
-Shiny app for exploring Kantar data on nutrition in Scotland from 2018-2022
+Shiny app to explore nutritional trends in Scotland 2019-2022
