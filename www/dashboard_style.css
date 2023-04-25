@@ -1,0 +1,86 @@
+/*
+Navigation button colours
+All the sass: https://getbootstrap.com/docs/5.0/components/buttons/
+*/
+
+.btn {
+  border-width: 2px;
+  color: #ffffff;
+  text-align: left;
+  white-space: normal;
+  margin: 0;
+  
+}
+
+.btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px #cbd6ee;
+  color: #ffffff;
+}
+
+.btn-default {
+  background-color: #3F2A56;
+  border-color: #3F2A56;
+}
+
+.btn-chem {
+  background-color: #005E5D;
+  border-color: #005E5D;
+}
+  
+.btn-micro {
+  background-color: #BABD8B;
+  border-color: #BABD8B;
+}
+
+.btn-authen {
+  background-color: #607875;
+  border-color: #607875;
+  
+}
+.btn-labelling {
+  background-color: #949300;
+  border-color: #949300;
+}
+.btn-overall {
+  background-color: #C251AD;
+  border-color: #C251AD;
+}
+
+/*
+Navigation button hover
+*/ 
+
+.btn:hover {
+    background-color: #bcc9c5;
+    color: #ffffff;
+}
+
+.btn-default:hover {
+  border-color: #3F2A56;
+}
+
+.btn-chem:hover {
+  border-color: #005E5D;
+}
+  
+.btn-micro:hover {
+  border-color: #BABD8B;
+}
+
+.btn-authen:hover {
+  border-color: #607875;
+  
+}
+.btn-labelling:hover {
+  border-color: #949300;
+}
+.btn-overall:hover {
+  border-color: #C251AD;
+}
+
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 0;
+}

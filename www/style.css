@@ -1,0 +1,58 @@
+/*
+http://wrapbootstrap.com/preview/WB0JR603C
+*/
+
+
+.h1, h2, h3, h4, h5, h6 {
+	color: #ffffff;
+	/*font-family: 'Montserrat', sans-serif;*/
+}
+
+h1, h2, h3 {
+	/*font-weight: bold;*/
+	text-transform: uppercase;
+	text-align: center;
+	letter-spacing: .1em;
+	line-height: 1.2;
+}
+
+h1 {
+	margin: 50px 0;
+}
+
+h1.title{
+	color: #ffffff;
+}
+
+sidebar {
+  background-color: #3F2A56;
+        }
+
+
+.navbar-default {
+    background-color: #3F2A56 !important;
+}
+
+.navbar-default .navbar-brand {color: white;}
+
+.navbar .navbar-nav {
+  float: right;
+}
+
+.navbar .navbar-header {
+  float: left;
+}
+
+.navbar-nav > li > a, .navbar-brand {
+                   padding-top:25px;
+                   padding-bottom:25px;
+                   height: 70px;
+
+                 }
+                 
+.navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
+    color: #3F2A56 ;
+    background-color: #BBDDE6;
+}
+
+
