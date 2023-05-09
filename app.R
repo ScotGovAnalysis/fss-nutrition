@@ -24,6 +24,10 @@ ui <- tagList(  tags$head(
         # SIDEBAR  ---------------------------------------------------------------
         
         dashboardSidebar(
+          sidebarMenu(menuItem("  Trends over time", tabName = "overtime", icon = icon("chart-line")),
+                      menuItem("  Yearly profile", tabName = "yearly", icon = icon("bars-progress")),
+                      menuItem("  F&D categories", tabName = "categories", icon = icon("carrot")),
+                      menuItem("  Chart builder", tabName = "chart-builder", icon = icon("chart-simple")))
             
         ),
         
@@ -39,8 +43,12 @@ ui <- tagList(  tags$head(
             # ),
             customTheme,
 
-            
-            ######## INSERT BODY ###############
+          
+            tabItem(tabName = "overtime"
+                    
+                    
+                    
+                    )
             
           
           
