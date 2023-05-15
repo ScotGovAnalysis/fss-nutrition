@@ -1,22 +1,25 @@
 library(shiny)
 library(shinydashboard)
 library(dashboardthemes)
+library(shinyWidgets)
+library(purrr)
 
 
 source("scripts/dashboard_theme.R")
-
+modules <- list.files("modules/", full.names = T)
+map(modules, source)
 
 
 ui <- tagList(  tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "dashboard_style.css")),
     dashboardPage(
-        title = "FSS Dashboard Template",
+        title = "FSS Nutrition Dashboard",
         
         
         # HEADER ------------------------------------------------------------------
         dashboardHeader(
             title = div(tags$a(href='https://www.foodstandards.gov.scot/',
-                               tags$img(src='fss_logo.png', width = 80)), "FSS Dashboard Template"),
+                               tags$img(src='fss_logo.png', width = 80)), "FSS Nutrition Dashboard"),
             titleWidth = 410
         ),
         
@@ -42,16 +45,32 @@ ui <- tagList(  tags$head(
             #         href = "radar_style.css")
             # ),
             customTheme,
-
+tabItems(
           
-            tabItem(tabName = "overtime"
+            tabItem(tabName = "overtime",
+                   overtimeTabUI("overtime")
                     
+                    ), 
+            
+            tabItem(tabName = "yearly",
+              " "
                     
+            ), 
+            
+            tabItem(tabName = "categories",
+                    " "
                     
-                    )
+            ), 
+            
+            tabItem(tabName = "chart-builder",
+
+                    " "
+            )
+            
+            
             
           
-          
+)         
 )
 )
 )
