@@ -23,9 +23,9 @@ All the sass: https://getbootstrap.com/docs/5.0/components/buttons/
   border-color: #3F2A56;
 }
 
-.btn-chem {
-  background-color: #005E5D;
-  border-color: #005E5D;
+.btn-metric {
+  background-color: #3F2A56;
+  border-color: #3F2A56;
 }
   
 .btn-micro {
@@ -60,8 +60,8 @@ Navigation button hover
   border-color: #3F2A56;
 }
 
-.btn-chem:hover {
-  border-color: #005E5D;
+.btn-metric:hover {
+  border-color: #3F2A56;
 }
   
 .btn-micro:hover {

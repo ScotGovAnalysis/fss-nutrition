@@ -3,6 +3,7 @@ library(shinydashboard)
 library(dashboardthemes)
 library(shinyWidgets)
 library(purrr)
+library(shinyBS)
 
 
 source("scripts/dashboard_theme.R")
@@ -53,7 +54,7 @@ tabItems(
                     ), 
             
             tabItem(tabName = "yearly",
-              " "
+                    yearlyTabUI("yearly")
                     
             ), 
             
