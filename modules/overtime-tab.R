@@ -56,7 +56,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
         aes(x = Year, y = Spend) +
         geom_col(color = "#607875", fill = "#607875") +
         theme_classic() +
-        labs(title = "Average spend per capita per day in Scotland", 
+        labs(title = "Average annual spend on retail food and drink,\nper capita, per day in Scotland", 
              y = "Spend (£)")
       
       ggplotly(p7)
@@ -71,7 +71,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
         aes(x = Year, y = `Energy kcal`) +
         geom_col(color = "#005e5d", fill = "#005e5d") +
         theme_classic() +
-        labs(title = "Average purchase of calories (kcal) per capita \nper day in Scotland", 
+        labs(title = "Average annual purchase of calories from retail\nper capita per day in Scotland", 
              y = "Energy (kcal)")
       
       ggplotly(p8)
@@ -90,7 +90,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
         geom_col(color = "#babd8b", fill = "#babd8b") +
         theme_classic() +
         labs(y = "Number of trips per household", 
-             title = "Average number of trips per household per year")
+             title = "Average number of annual retail food and drink trips\nper househould in Scoland")
       
       ggplotly(p5)
       
@@ -109,7 +109,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
         scale_y_continuous(labels = unit_format(unit = "M", scale = 1e-6)) +
         theme_classic() +
         labs(y = input$metric, 
-             title = paste0("Overall ", input$metric, " in Scotland per year"))
+             title = paste0("Total annual ", input$metric, " purchased on retail food and drink in Scotland"))
       ggplotly(p1)
     })
     
@@ -124,7 +124,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
         scale_y_continuous(labels = unit_format(unit = "M", scale = 1e-6)) +
         theme_classic() +
         labs(y = input$metric, 
-             title = paste0("Online purchases by retailer type" ))
+             title = paste0("Total annual online spend on retail food and drink, by retailer type, in Scotland" ))
       ggplotly(p2)
       
     })
@@ -141,10 +141,10 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
                 color = ~ SIMD, 
                 type = "scatter", 
                 mode = "lines")%>%
-        layout(title = list(text = paste0("Percentage purchased on a price promotion by SIMD"), 
+        layout(title = list(text = paste0("Total annual retail purchase of food and drink purchased on price promotion in Scotland,\nby SIMD"), 
                             xanchor = "left", 
                             x = 0), 
-               yaxis = list(title = "Percentage (%)"))
+               yaxis = list(title = "Percentage volume purchased on promotion (%)"))
       
     })
     
@@ -165,8 +165,8 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
         scale_y_continuous(labels = scales::percent) +
         scale_fill_viridis_d() +
         theme_classic() +
-        labs(y = "Percentage of nutritional volume", 
-             title = "Proportion of nutritional volume purchased by promotion type")
+        labs(y = "Percentage volume purchased on promotion (%)", 
+             title = "Total annual retail purchase of food and drink purchased on price promotion\nin Scotland, by promotion type")
       
       
     })
@@ -190,8 +190,8 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
                 type = "scatter", 
                 mode = "lines",
                 colors = viridis_pal()(7)) %>%
-        layout(title = "Average purchase of nutritional component per person per day in Scotland",
-               yaxis = list(title = "Grams"))
+        layout(title = "Average annual retail purchase of key nutrients, per capita, per day in Scotland",
+               yaxis = list(title = "Grams (g)"))
       
       
     })
