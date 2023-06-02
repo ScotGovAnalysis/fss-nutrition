@@ -69,11 +69,15 @@ yearlyTabUI <- function(id){
   fluidRow(br()), 
   
   fluidRow(
-    box(width = 4, plotOutput(ns("plot1"))),
+    box(width = 6, plotlyOutput(ns("plot1"))),
     
-    box(width = 4, plotOutput(ns("plot2"))),
-    
-    box(width = 4, plotOutput(ns("plot3")))
+    box(width = 6, plotlyOutput(ns("plot2")))
+  ), 
+  
+  fluidRow(
+    box(width = 6, plotlyOutput(ns("plot3"))),
+  
+    box(width = 6, plotlyOutput(ns("plot4")))
   )
   ) 
   
@@ -157,6 +161,108 @@ yearlyTabServer <- function(id, overall, promotype, online, totals_pppd) {
                    
                    
                  })
+                 
+                 
+                 
+                 
+                 output$plot1 <- renderPlotly({
+                   
+                   online_retail <- online %>%  
+                     filter(`Promotion Type`== "Total ONLINE", `Retailer Type` == "Total Market") %>%
+                     bind_rows(totals) %>% 
+                     select(Channels, Year, Spend, Volume, `Nutritional Volume`, `Energy kcal`) %>%
+                     pivot_longer(cols = c(Spend:`Energy kcal`)) %>%
+                     pivot_wider(names_from = Channels, values_from = value) %>%
+                     mutate(Retail = (All - Online)) %>%
+                     select(-All) %>%
+                     pivot_longer(Online:Retail, names_to = "Channel", values_to = "Value") 
+                   
+                   
+                   online_retail %>% 
+                     filter(name == "Nutritional Volume") %>%
+                     filter(Year == input$select_year) %>%
+                     plot_ly(labels = ~Channel, values = ~Value, 
+                             hoverinfo = "none",
+                             marker = list(colors = c("#dcdb00", "#3F2A56"))) %>%
+                     add_pie(hole = 0.6, 
+                             insidetextorientation = "horizontal") %>%
+                     layout(title = paste0("Proportion of nutritional volume purchased by\nchannel type in Scotland during ",  input$select_year) ,
+                            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
+                            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE), 
+                            margin = list( t = 70))
+                  
+                   
+                 })
+                 
+                
+                   
+                   
+                 
+                 
+                 output$plot2 <- renderPlotly({
+                   
+                   promotype %>%
+                     filter(Year == input$select_year) %>%
+                     filter(`Promotion type` != "TOTAL SALES",
+                            `Promotion type` != "On Promotion") %>%
+                     filter(SIMD == "Total Household") %>%
+                     plot_ly(labels = ~`Promotion type`,
+                             values = ~`Nutritional Volume`,
+
+                             marker = list(colors = c("#dcdb00", "#3F2A56"))
+                     ) %>%
+                     add_pie(hole = 0.6, textposition = "outside") %>%
+                     layout(title = paste0("Proportion of nutritional volume purchased by\nprice promotion type in Scotland during ",  input$select_year) ,
+                            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
+                            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
+                            margin = list( t = 70))
+                   
+                   
+                 })
+                 
+                 
+                 
+                 output$plot3 <- renderPlotly({
+                   
+                   p <- promotype %>% 
+                     filter(Year == input$select_year) %>%
+                     filter(`Promotion type` != "TOTAL SALES", 
+                            `Promotion type` != "On Promotion") %>%
+                     filter(!SIMD %in% c("No SIMD", "Total Household"))%>%
+                     mutate(`Promotion type` = as.factor(`Promotion type`), 
+                            `Promotion type` = fct_relevel(`Promotion type`, "No promotion"))%>%
+                     ggplot() +
+                     aes(x = SIMD, y = `Nutritional Volume`, fill = `Promotion type`) +
+                     geom_col(position = "fill") +
+                     scale_fill_viridis_d() +
+                     scale_y_continuous(labels = scales::percent) +
+                     theme_classic() +
+                     labs(title = paste0("Proportion of nutritional volume purchased by price promotion\ntype & SIMD in Scotland during ",  input$select_year))
+                   ggplotly(p)
+                   
+                 })
+                 
+                 
+                 output$plot4 <- renderPlotly({
+                   
+                   online %>%
+                     filter(SIMD == "Total Household", 
+                            `Retailer Type` == "Total Market", 
+                            !`Promotion Type` %in% c("Total ONLINE", "On Promotion")) %>%
+                     plot_ly(labels = ~`Promotion Type`, 
+                             values = ~`Nutritional Volume`, 
+                             
+                             marker = list(colors = c("#dcdb00", "#3F2A56"))
+                     ) %>%
+                     add_pie(hole = 0.6, textposition = "outside") %>%
+                     layout(title = paste0("Proportion of retail nutritional volume purchased by\nby price promotion type in Scotland - online only during ",  input$select_year) ,
+                            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
+                            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE), 
+                            margin = list( t = 70))
+                   
+                   
+                 })
+                 
                  
                  
                }
