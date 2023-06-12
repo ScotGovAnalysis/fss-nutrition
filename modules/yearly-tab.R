@@ -17,7 +17,8 @@ yearlyTabUI <- function(id){
       width = 2,
       bsButton(ns("metric1"),
                label = HTML(paste0("<b style='font-size:20px'>",textOutput(ns("metric1_text")),
-                                   "</b><p style='font-size:14px'><br>Total spend</p>")),
+                                   "</b><p style='font-size:14px'>spent (online and in-store) in total on retail food and drink     
+                              </p>")),
                style = "metric",
                size = "small",
                width = "100%"
@@ -25,21 +26,21 @@ yearlyTabUI <- function(id){
     ),
     column(width = 2,
            bsButton(ns("metric2"),
-                    label = HTML(paste0("<b style='font-size:20px'>",textOutput(ns("metric2_text")),"</b><p style='font-size:14px'><br>Total online spend<p style='font-size:14px'>")),
+                    label = HTML(paste0("<b style='font-size:20px'>",textOutput(ns("metric2_text")),"</b><p style='font-size:14px'>spent (online and in-store) in total on retail food and drink<p style='font-size:14px'>")),
                     style = "metric",
                     size = "small",
                     width = "100%")
     ),
     column(width = 2,
            bsButton(ns("metric3"),
-                    label = HTML(paste0("<b style='font-size:20px'>",textOutput(ns("metric3_text")),"</b><p style='font-size:14px'><br>Spend per person per day")),
+                    label = HTML(paste0("<b style='font-size:20px'>",textOutput(ns("metric3_text")),"</b><p style='font-size:14px'>spent on retail food and drink, per person, per day")),
                     style = "metric",
                     size = "small",
                     width = "100%")
     ),
     column(width = 2,
            bsButton(ns("metric4"),
-                    label = HTML(paste0("<b style='font-size:20px'>", textOutput(ns("metric4_text")),"</b><p style='font-size:14px'><br>Purchased per person per day")),
+                    label = HTML(paste0("<b style='font-size:20px'>", textOutput(ns("metric4_text")),"</b><p style='font-size:14px'>purchased from retail, per person,\nper day ")),
                     style = "metric",
                   #  icon = icon("thumbs-o-up"),
                    size = "small",
@@ -47,7 +48,7 @@ yearlyTabUI <- function(id){
     ),
     column(width = 2,
            bsButton(ns("metric5"),
-                    label = HTML(paste0("<b style='font-size:20px'>",textOutput(ns("metric5_text")),"</b><p style='font-size:14px'>Nutritional volume purchased on a price promotion")),
+                    label = HTML(paste0("<b style='font-size:20px'>",textOutput(ns("metric5_text")),"</b><p style='font-size:14px'>of retail food and drink volume purchased on price promotion")),
                   #  icon = icon("tag"),
                     style = "metric",
                     size = "small",
@@ -57,7 +58,7 @@ yearlyTabUI <- function(id){
     ),
     column(width = 2,
            bsButton(ns("metric6"),
-                    label = HTML(paste0("<b style='font-size:20px'>",textOutput(ns("metric6_text")),"</b><p style='font-size:14px'>Calories purchased on a price promotion")),
+                    label = HTML(paste0("<b style='font-size:20px'>",textOutput(ns("metric6_text")),"</b><p style='font-size:14px'>of retail food and drink calories purchased on price promotion")),
                     #icon = icon("tag"),
                     style = "metric",
                     size = "small",
@@ -186,7 +187,7 @@ yearlyTabServer <- function(id, overall, promotype, online, totals_pppd) {
                              marker = list(colors = c("#dcdb00", "#3F2A56"))) %>%
                      add_pie(hole = 0.6, 
                              insidetextorientation = "horizontal") %>%
-                     layout(title = paste0("Proportion of nutritional volume purchased by\nchannel type in Scotland during ",  input$select_year) ,
+                     layout(title = paste0("Percentage of retail food and drink volume purchased on price promotion during ",  input$select_year) ,
                             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
                             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE), 
                             margin = list( t = 70))
@@ -212,7 +213,7 @@ yearlyTabServer <- function(id, overall, promotype, online, totals_pppd) {
                              marker = list(colors = c("#dcdb00", "#3F2A56"))
                      ) %>%
                      add_pie(hole = 0.6, textposition = "outside") %>%
-                     layout(title = paste0("Proportion of nutritional volume purchased by\nprice promotion type in Scotland during ",  input$select_year) ,
+                     layout(title = paste0("Percentage of retail food and drink calories purchased on price promotion during ",  input$select_year) ,
                             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
                             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
                             margin = list( t = 70))
@@ -237,7 +238,7 @@ yearlyTabServer <- function(id, overall, promotype, online, totals_pppd) {
                      scale_fill_viridis_d() +
                      scale_y_continuous(labels = scales::percent) +
                      theme_classic() +
-                     labs(title = paste0("Proportion of nutritional volume purchased by price promotion\ntype & SIMD in Scotland during ",  input$select_year))
+                     labs(title = paste0("Percentage of retail food and drink volume purchased by promotion type and SIMD during ",  input$select_year))
                    ggplotly(p)
                    
                  })
@@ -255,7 +256,7 @@ yearlyTabServer <- function(id, overall, promotype, online, totals_pppd) {
                              marker = list(colors = c("#dcdb00", "#3F2A56"))
                      ) %>%
                      add_pie(hole = 0.6, textposition = "outside") %>%
-                     layout(title = paste0("Proportion of retail nutritional volume purchased by\nby price promotion type in Scotland - online only during ",  input$select_year) ,
+                     layout(title = paste0("Percentage of of online retail food and drink volume purchased by promotion type during ",  input$select_year) ,
                             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
                             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE), 
                             margin = list( t = 70))
