@@ -47,13 +47,12 @@ ui <- tagList(  tags$head(
         ), 
         
         tabItem(tabName = "categories",
-                " "
+                categoryTabUI("promo")
                 
         ), 
         
         tabItem(tabName = "chart-builder",
-                
-                " "
+              "Empty tab"
         )
         
         
@@ -72,11 +71,17 @@ ui <- tagList(  tags$head(
 
 server <- function(input, output, session) {
   
-  overtimeTabServer("overtime", overall, promotype, online, totals_pppd)
+  overtimeTabServer("overtime", overall, promotype, online, totals_pppd, category)
   
   
   yearlyTabServer("yearly", overall, promotype, online, totals_pppd)
+  
+
+  categoryTabServer("promo", category_promo_totals, category)
+  
 }
+
+
 
 
 
