@@ -23,19 +23,17 @@ overtimeTabUI <- function(id) {
           column(width = 6, plotlyOutput(ns("plot1"))),
           column(width = 6, plotlyOutput(ns("plot2")))
         ))),
-    box(width = 12,
+   fluidRow(box(width = 12,
         fluidRow(
           column(width = 6, plotlyOutput(ns("plot3"))),
           column(width = 6, plotlyOutput(ns("plot4")))
         )),
-    fluidRow(column(width = 2),
-             column(
-               width = 8,
+    
                box(width = 12,
-                   plotlyOutput(ns("plot5"))),
-               column(width = 2)
-             ))
-  )
+                   column(width = 6, plotlyOutput(ns("plot5"))),
+                   column(width = 6, plotlyOutput(ns("plot6"))),
+             )
+  ))
 }
 
 
@@ -43,7 +41,7 @@ overtimeTabUI <- function(id) {
 # the server takes in an id and the data. 
 # it renders all of the plots and tables on the overall tab
 
-overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
+overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, category) {
   moduleServer(id, function(input, output, session) {
     
     
@@ -90,14 +88,14 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
         geom_col(color = "#babd8b", fill = "#babd8b") +
         theme_classic() +
         labs(y = "Number of trips per household", 
-             title = "Average number of annual retail food and drink trips\nper househould in Scoland")
+             title = "Average number of annual retail food and drink trips\nper househould in Scotland")
       
       ggplotly(p5)
       
       
     })
     
-    
+    t
     
     output$plot1 <- renderPlotly({
       p1 <-   overall %>%
@@ -109,7 +107,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
         scale_y_continuous(labels = unit_format(unit = "M", scale = 1e-6)) +
         theme_classic() +
         labs(y = input$metric, 
-             title = paste0("Total annual ", input$metric, " purchased on retail food and drink in Scotland"))
+             title = paste0("Total annual ", str_to_lower(input$metric), " purchased on retail food and drink in Scotland"))
       ggplotly(p1)
     })
     
@@ -124,7 +122,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
         scale_y_continuous(labels = unit_format(unit = "M", scale = 1e-6)) +
         theme_classic() +
         labs(y = input$metric, 
-             title = paste0("Total annual online spend on retail food and drink, by retailer type, in Scotland" ))
+             title = paste0("Total annual online ", str_to_lower(input$metric),  " purchased on food and drink, by retailer type, in Scotland" ))
       ggplotly(p2)
       
     })
@@ -140,7 +138,10 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
                 y = ~`Nutritional Volume %`, 
                 color = ~ SIMD, 
                 type = "scatter", 
-                mode = "lines")%>%
+                mode = "lines",
+                colors = c( "#12436D","#28A197","#801650" ,
+                                             "#F46A25","#3D3D3D","#A285D1",
+                                             "#2073BC" ))%>%
         layout(title = list(text = paste0("Total annual retail purchase of food and drink purchased on price promotion in Scotland,\nby SIMD"), 
                             xanchor = "left", 
                             x = 0), 
@@ -163,7 +164,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
         aes(x = Year, y = `Nutritional Volume`, fill = `Promotion type`) +
         geom_col(position = "fill") +
         scale_y_continuous(labels = scales::percent) +
-        scale_fill_viridis_d() +
+        scale_fill_discrete_sg("main6") +
         theme_classic() +
         labs(y = "Percentage volume purchased on promotion (%)", 
              title = "Total annual retail purchase of food and drink purchased on price promotion\nin Scotland, by promotion type")
@@ -189,12 +190,35 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd) {
                 color = ~ Nutrient, 
                 type = "scatter", 
                 mode = "lines",
-                colors = viridis_pal()(7)) %>%
+                colors = c( "#12436D","#28A197","#801650" ,
+                             "#F46A25","#3D3D3D","#A285D1",
+                             "#2073BC" )) %>%
         layout(title = "Average annual retail purchase of key nutrients, per capita, per day in Scotland",
                yaxis = list(title = "Grams (g)"))
       
       
     })
+    
+    
+    
+    output$plot6 <- renderPlotly({
+      
+      
+      
+      category %>% 
+        filter(SIMD == "Total Household") %>%
+        filter(`F&D Category` != "Total Food & Drink") %>%
+        plot_ly(x = ~Year, 
+                y = ~`Nutritional Volume %`, 
+                color = ~ `F&D Category`, 
+                type = "scatter", 
+                mode = "lines") %>%
+        layout(title = "Annual retail purchase of food and drink categories as a percentage of total annual nutritional volume",
+               yaxis = list(title = "% of total food and drink"))
+      
+      
+    })
+    
     
   })
 }
