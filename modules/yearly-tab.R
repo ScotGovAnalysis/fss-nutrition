@@ -174,9 +174,9 @@ yearlyTabServer <- function(id, overall, promotype, online, totals_pppd) {
                      select(Channels, Year, Spend, Volume, `Nutritional Volume`, `Energy kcal`) %>%
                      pivot_longer(cols = c(Spend:`Energy kcal`)) %>%
                      pivot_wider(names_from = Channels, values_from = value) %>%
-                     mutate(Retail = (All - Online)) %>%
+                     mutate(`In-store` = (All - Online)) %>%
                      select(-All) %>%
-                     pivot_longer(Online:Retail, names_to = "Channel", values_to = "Value") 
+                     pivot_longer(Online:`In-store`, names_to = "Channel", values_to = "Value") 
                    
                    
                    online_retail %>% 
@@ -184,10 +184,10 @@ yearlyTabServer <- function(id, overall, promotype, online, totals_pppd) {
                      filter(Year == input$select_year) %>%
                      plot_ly(labels = ~Channel, values = ~Value, 
                              hoverinfo = "none",
-                             marker = list(colors = c("#dcdb00", "#3F2A56"))) %>%
+                             marker = list(colors = c(sg_colour_values[1], sg_colour_values[2]))) %>%
                      add_pie(hole = 0.6, 
                              insidetextorientation = "horizontal") %>%
-                     layout(title = paste0("Percentage of retail food and drink volume purchased on price promotion during ",  input$select_year) ,
+                     layout(title = paste0("Percentage of food and drink purchased by channel (online or in-store) during ",  input$select_year) ,
                             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
                             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE), 
                             margin = list( t = 70))
@@ -207,13 +207,15 @@ yearlyTabServer <- function(id, overall, promotype, online, totals_pppd) {
                      filter(`Promotion type` != "TOTAL SALES",
                             `Promotion type` != "On Promotion") %>%
                      filter(SIMD == "Total Household") %>%
+                     mutate(`Promotion type` = as.factor(`Promotion type`), 
+                            `Promotion type` = fct_relevel(`Promotion type`, "No promotion"))%>%
                      plot_ly(labels = ~`Promotion type`,
                              values = ~`Nutritional Volume`,
 
-                             marker = list(colors = c("#dcdb00", "#3F2A56"))
+                             marker = list(colors = c(sg_colour_values[1:5]))
                      ) %>%
                      add_pie(hole = 0.6, textposition = "outside") %>%
-                     layout(title = paste0("Percentage of retail food and drink calories purchased on price promotion during ",  input$select_year) ,
+                     layout(title = paste0("Percentage of retail food and drink calories purchased by price promotion type during ",  input$select_year) ,
                             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
                             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
                             margin = list( t = 70))
@@ -235,7 +237,7 @@ yearlyTabServer <- function(id, overall, promotype, online, totals_pppd) {
                      ggplot() +
                      aes(x = SIMD, y = `Nutritional Volume`, fill = `Promotion type`) +
                      geom_col(position = "fill") +
-                     scale_fill_viridis_d() +
+                     scale_fill_discrete_sg("main6") +
                      scale_y_continuous(labels = scales::percent) +
                      theme_classic() +
                      labs(title = paste0("Percentage of retail food and drink volume purchased by promotion type and SIMD during ",  input$select_year))
@@ -253,7 +255,7 @@ yearlyTabServer <- function(id, overall, promotype, online, totals_pppd) {
                      plot_ly(labels = ~`Promotion Type`, 
                              values = ~`Nutritional Volume`, 
                              
-                             marker = list(colors = c("#dcdb00", "#3F2A56"))
+                             marker = list(colors = c(sg_colour_values[1:5]))
                      ) %>%
                      add_pie(hole = 0.6, textposition = "outside") %>%
                      layout(title = paste0("Percentage of of online retail food and drink volume purchased by promotion type during ",  input$select_year) ,
