@@ -132,7 +132,11 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
     
     output$plot2a <- renderPlotly({
       
-      var_name <- paste0(input$metric, " %")
+      var_name <- if_else( input$metric == "Energy kcal", 
+                           paste0(input$metric), 
+        paste0(input$metric, " %"))
+      
+      
       category %>% 
         filter(SIMD == "Total Household") %>%
         filter(`F&D Category` != "Total Food & Drink") %>%
