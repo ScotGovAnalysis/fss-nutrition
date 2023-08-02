@@ -20,8 +20,9 @@ overtimeTabUI <- function(id) {
           )
         )),
         column(width = 12,    fluidRow(
-          column(width = 6, plotlyOutput(ns("plot1"))),
-          column(width = 6, plotlyOutput(ns("plot2")))
+          column(width = 4, plotlyOutput(ns("plot1"))),
+          column(width = 4, plotlyOutput(ns("plot2"))), 
+          column(width = 4, plotlyOutput(ns("plot2a")))
         ))),
    fluidRow(box(width = 12,
         fluidRow(
@@ -95,7 +96,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
       
     })
     
-    t
+ 
     
     output$plot1 <- renderPlotly({
       p1 <-   overall %>%
@@ -128,11 +129,37 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
     })
     
     
+    
+    output$plot2a <- renderPlotly({
+      
+      var_name <- paste0(input$metric, " %")
+      category %>% 
+        filter(SIMD == "Total Household") %>%
+        filter(`F&D Category` != "Total Food & Drink") %>%
+        filter(food_groups != "Other") %>%
+        group_by(food_groups, Year) %>%
+        summarise(var_name := sum(get(var_name))) %>%
+        plot_ly(x = ~Year,  
+                y = ~var_name, 
+                color = ~ food_groups, 
+                type = "scatter", 
+                mode = "lines", 
+                colors = c( "#12436D","#28A197","#801650" ,
+                            "#F46A25","#3D3D3D" )) %>%
+        layout(title = paste0("Annual retail purchase of food and drink categories as a percentage of total annual ", str_to_lower(input$metric)),
+               yaxis = list(title = "% of total food and drink"))
+      
+      
+    })
+    
+    
+    
     output$plot3 <- renderPlotly({
       
       
       promotype %>%
         mutate(Year = as.character(Year)) %>%
+        filter(SIMD != "No SIMD") %>%
         filter(`Promotion type` == "On Promotion") %>%
         plot_ly(x = ~Year, 
                 y = ~`Nutritional Volume %`, 
@@ -200,25 +227,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
     })
     
     
-    
-    output$plot6 <- renderPlotly({
-      
-      
-      
-      category %>% 
-        filter(SIMD == "Total Household") %>%
-        filter(`F&D Category` != "Total Food & Drink") %>%
-        plot_ly(x = ~Year, 
-                y = ~`Nutritional Volume %`, 
-                color = ~ `F&D Category`, 
-                type = "scatter", 
-                mode = "lines") %>%
-        layout(title = "Annual retail purchase of food and drink categories as a percentage of total annual nutritional volume",
-               yaxis = list(title = "% of total food and drink"))
-      
-      
-    })
-    
+
     
   })
 }
