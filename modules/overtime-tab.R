@@ -150,7 +150,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
                 mode = "lines", 
                 colors = c( "#12436D","#28A197","#801650" ,
                             "#F46A25","#3D3D3D" )) %>%
-        layout(title = paste0("Annual retail purchase of food and drink categories as a percentage of total annual ", str_to_lower(input$metric)),
+        layout(title = paste0("Annual retail purchase of food and drink categories as a\npercentage of total annual ", str_to_lower(input$metric)),
                yaxis = list(title = "% of total food and drink"))
       
       
