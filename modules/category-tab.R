@@ -20,6 +20,7 @@ categoryTabUI <- function(id){
                                        
                                        choices = c("Total nutritional volume purchased" = "NutritionalVolume", 
                                                    "Nutritional volume purchased as a percentage of total food and drink" = "pctg_total_fd", 
+                                                   "Total annual spend as a percentage of total food and drink" = "pctg_spend",  
                                                    "Nutritional volume purchased on a price promotion (all retail)"  = "pctg_price_promo", 
                                                    "Nutritional volume by SIMD" = "simd")))),
            fluidRow(box(width = 12, plotlyOutput(ns("plot1"), height = 600)
@@ -78,6 +79,8 @@ categoryTabServer <- function(id, data_promo, data_simd) {
                        need(length(input$category)>0 & length(input$category) <= 8, "Select up to 8 categories from the list on the right to include in the plot")
                      )
                      
+                     
+                     ########## PREP DATA FOR SIMD PLOT HERE
                      
                      
                      data_simd %>%
