@@ -233,11 +233,11 @@ yearlyTabServer <- function(id, overall, promotype, online, totals_pppd) {
                             `Promotion type` != "On Promotion") %>%
                      filter(!SIMD %in% c("No SIMD", "Total Household"))%>%
                      mutate(`Promotion type` = as.factor(`Promotion type`), 
-                            `Promotion type` = fct_relevel(`Promotion type`, "No promotion"))%>%
+                            `Promotion type` = fct_relevel(`Promotion type`, c("No promotion", "TPR", "Y for £X", "Other", "MultiBuy")))%>%
                      ggplot() +
                      aes(x = SIMD, y = `Nutritional Volume`, fill = `Promotion type`) +
                      geom_col(position = "fill") +
-                     scale_fill_discrete_sg("main6") +
+                     scale_fill_manual(values = c("#12436D", "#28A197", "#F46A25", "#3D3D3D", "#801650")) +
                      scale_y_continuous(labels = scales::percent) +
                      theme_classic() +
                      labs(title = paste0("Percentage of retail food and drink volume purchased by promotion type and SIMD during ",  input$select_year))
