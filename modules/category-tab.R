@@ -117,12 +117,14 @@ categoryTabServer <- function(id, data_promo, data_simd) {
                      data_promo %>%
                        filter(Year == input$select_year) %>%
                        filter(`F&D Category` %in% input$category) %>%
-                       mutate(`F&D Category` = fct_reorder(`F&D Category`, !!as.symbol(input$xaxis))) %>%
+                       mutate(`F&D Category` = fct_reorder(`F&D Category`, !!as.symbol(input$xaxis)), 
+                              col_fill = if_else(`F&D Category` == "Total Food & Drink", "high", "reg")) %>%
                        #data_for_plot() %>%
                        ggplot() +
-                       aes(x = !!as.symbol(input$xaxis), y =`F&D Category` ) +
+                       aes(x = !!as.symbol(input$xaxis), y =`F&D Category`, fill = col_fill ) +
                        geom_col(width = 0.8) +
                        theme_classic()+
+                       scale_fill_discrete_sg("focus")+
                        #  theme_sg() +
                        # theme(text = element_text(family = "")) +
                        labs(x = ifelse(input$xaxis == "NutritionalVolume", "Nutritional volume", "Percentage of total (%)"),
