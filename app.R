@@ -77,7 +77,7 @@ server <- function(input, output, session) {
   yearlyTabServer("yearly", overall, promotype, online, totals_pppd)
   
 
-  categoryTabServer("promo", category_promo_totals, category)
+  categoryTabServer("promo", category_promo_totals, category_simd)
   
 }
 
