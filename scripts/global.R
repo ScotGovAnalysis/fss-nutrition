@@ -13,7 +13,7 @@ library(lubridate)
 library(scales)
 library(viridis)
 library(sgplot)
-
+library(shinyalert)
 
 # read in theme and modules
 
@@ -158,4 +158,6 @@ category_simd <- category %>%
   bind_rows(category %>% mutate(Year = as.character(Year))) 
 
 
+# Insert the about this data text
+about_text <- readLines("data/about-tab-text")
   
