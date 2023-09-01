@@ -19,7 +19,7 @@ ui <- tagList(  tags$head(
       sidebarMenu(menuItem("  Trends over time", tabName = "overtime", icon = icon("chart-line")),
                   menuItem("  Yearly profile", tabName = "yearly", icon = icon("bars-progress")),
                   menuItem("  F&D categories", tabName = "categories", icon = icon("carrot")),
-                  menuItem("  Chart builder", tabName = "chart-builder", icon = icon("chart-simple")))
+                  menuItem("  About ", tabName = "about", icon = icon("info")))
       
     ),
     
@@ -51,8 +51,8 @@ ui <- tagList(  tags$head(
                 
         ), 
         
-        tabItem(tabName = "chart-builder",
-              "Empty tab"
+        tabItem(tabName = "about",
+              tagList(box(width = 12, title = "About this dashboard", HTML(paste(about_text, collapse = "<br>"))))
         )
         
         
@@ -71,6 +71,9 @@ ui <- tagList(  tags$head(
 
 server <- function(input, output, session) {
   
+  shinyalert("Welcome", "Please do not share screenshots or downloads from this dashboard without prior permission from ...", type = "info")
+  
+  
   overtimeTabServer("overtime", overall, promotype, online, totals_pppd, category)
   
   
@@ -78,6 +81,8 @@ server <- function(input, output, session) {
   
 
   categoryTabServer("promo", category_promo_totals, category_simd)
+  
+  
   
 }
 
