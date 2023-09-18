@@ -11,12 +11,11 @@ library(janitor)
 library(htmlwidgets)
 library(lubridate)
 library(scales)
-library(viridis)
 library(sgplot)
 library(shinyalert)
 
 # read in theme and modules
-
+options(scipen = 999)
 source("scripts/dashboard_theme.R")
 modules <- list.files("modules/", full.names = T)
 map(modules, source)
@@ -81,11 +80,14 @@ category <- read_excel("data/Kantar data 2019-22.xlsx", sheet = "F&D - Purchase"
     `F&D Category` %in% veg ~ "Vegetables",   
     `F&D Category` %in% alcohol ~ "Alcoholic drinks",   
     TRUE ~ "Other"
-  ))  %>% bind_rows(category %>%
-  filter(food_groups %in% c("Discretionary categories", "Additional categories")) %>%
-  group_by(food_groups, Year, SIMD, Promotype) %>%
-  summarise(across(where(is.numeric), sum)) %>%
-  rename(`F&D Category` = food_groups))
+  ))
+  
+category <- category %>% 
+  bind_rows(category %>%
+              filter(food_groups %in% c("Discretionary categories", "Additional categories")) %>%
+              group_by(food_groups, Year, SIMD, Promotype) %>%
+              summarise(across(where(is.numeric), sum)) %>%
+              rename(`F&D Category` = food_groups))
 
 # category data: annual spend, nutritional vol, kcal and nutritional components for select F&D categories and SIMD categories
 
@@ -98,9 +100,13 @@ category_promo <- read_excel("data/Kantar data 2019-22.xlsx", sheet = "F&D - Pro
     `F&D Category` %in% veg ~ "Vegetables",   
     `F&D Category` %in% alcohol ~ "Alcoholic drinks",   
     TRUE ~ "Other"
-  ))%>% bind_rows(category_promo %>%
+  )) 
+  
+  
+  category_promo <- category_promo %>%
+  bind_rows(category_promo %>%
                     filter(food_groups %in% c("Discretionary categories", "Additional categories")) %>%
-                             group_by(food_groups, Year, SIMD, Promotype) %>%
+                             group_by(food_groups, Year, Promotype) %>%
                              summarise(across(where(is.numeric), sum)) %>%
                              rename(`F&D Category` = food_groups))
                   
