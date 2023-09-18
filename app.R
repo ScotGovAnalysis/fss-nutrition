@@ -71,7 +71,7 @@ ui <- tagList(  tags$head(
 
 server <- function(input, output, session) {
   
-  shinyalert("Welcome", "Please do not share screenshots or downloads from this dashboard without prior permission from ...", type = "info")
+  shinyalert(" ", "This dashboard is for internal use only and sharing of data and any other outputs is not allowed without prior permission from Lesley Curtis", type = "info")
   
   
   overtimeTabServer("overtime", overall, promotype, online, totals_pppd, category)
