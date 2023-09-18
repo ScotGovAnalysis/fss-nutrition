@@ -23,7 +23,7 @@ categoryTabUI <- function(id){
                                                    "Total annual spend as a percentage of total food and drink" = "pctg_spend",  
                                                    "Nutritional volume purchased on a price promotion (all retail)"  = "pctg_price_promo", 
                                                    "Nutritional volume by SIMD" = "simd")))),
-           fluidRow(box(width = 12, plotlyOutput(ns("plot1"), height = 600)
+           fluidRow(box(width = 12, plotOutput(ns("plot1"), height = 600)
            ))
     ),
     
@@ -72,7 +72,7 @@ categoryTabServer <- function(id, data_promo, data_simd) {
                  
                  
                  
-                 output$plot1 <- renderPlotly({
+                 output$plot1 <- renderPlot({
                    
                    if (input$xaxis == "simd"){
                      validate(
@@ -92,13 +92,15 @@ categoryTabServer <- function(id, data_promo, data_simd) {
                        ggplot() +
                        aes(x = `Nutritional Volume %`, y =`F&D Category`, fill = SIMD ) +
                        geom_col(position = "dodge") +
-                       scale_fill_discrete_sg("main6") +
-                       theme_classic()+
+                       scale_fill_discrete_sg("main6", palette_type = "af") +
+                       theme_classic(base_size = 19)+
+                       theme(plot.title.position = "plot", 
+                             plot.title = element_text(size = 18)) +
                        #  theme_sg() +
-                       # theme(text = element_text(family = "")) +
+    ##################### PLOT LABELS
                        labs(x = "% of total nutritional volume purchased in retail by SIMD group",
                             title = paste0("Nutritional volume of food and drink categories purchased as a percentage of total food and drink purchased by SIMD during ", input$select_year), 
-                            y = " ")
+                            y = "Category")
                      
                      
                      
@@ -129,7 +131,8 @@ categoryTabServer <- function(id, data_promo, data_simd) {
                        # theme(text = element_text(family = "")) +
                        labs(x = ifelse(input$xaxis == "NutritionalVolume", "Nutritional volume", "Percentage of total (%)"),
                             title = plot_title, 
-                            y = " ")
+                            y = " ") +
+                       theme(legend.position = "none")
                      
                      
                    }

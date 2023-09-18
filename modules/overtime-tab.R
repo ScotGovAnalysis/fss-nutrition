@@ -195,7 +195,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
         aes(x = Year, y = `Nutritional Volume`, fill = `Promotion type`) +
         geom_col(position = "fill") +
         scale_y_continuous(labels = scales::percent) +
-        scale_fill_discrete_sg("main6") +
+        scale_fill_discrete_sg("main6", palette_type = "af") +
         theme_classic() +
         labs(y = "Percentage volume purchased on promotion (%)", 
              title = "Total annual retail purchase of food and drink purchased on price promotion\nin Scotland, by promotion type")
