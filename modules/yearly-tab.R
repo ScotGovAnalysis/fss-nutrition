@@ -26,7 +26,7 @@ yearlyTabUI <- function(id){
     ),
     column(width = 2,
            bsButton(ns("metric2"),
-                    label = HTML(paste0("<b style='font-size:20px'>",textOutput(ns("metric2_text")),"</b><p style='font-size:14px'>spent (online and in-store) in total on retail food and drink<p style='font-size:14px'>")),
+                    label = HTML(paste0("<b style='font-size:20px'>",textOutput(ns("metric2_text")),"</b><p style='font-size:14px'>spent online on retail food and drink<p style='font-size:14px'>")),
                     style = "metric",
                     size = "small",
                     width = "100%")
@@ -215,7 +215,7 @@ yearlyTabServer <- function(id, overall, promotype, online, totals_pppd) {
                              marker = list(colors = c(sg_colour_values[1:5]))
                      ) %>%
                      add_pie(hole = 0.6, textposition = "outside") %>%
-                     layout(title = paste0("Percentage of retail food and drink calories purchased by price promotion type during ",  input$select_year) ,
+                     layout(title = paste0("Percentage of retail food and drink nutritional volume purchased by price promotion type during ",  input$select_year) ,
                             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
                             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
                             margin = list( t = 70))
