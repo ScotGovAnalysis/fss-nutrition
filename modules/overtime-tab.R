@@ -1,5 +1,5 @@
-# This module provides the ui and server for everything on the overall tab.
-# The UI takes in an id to link it to the server
+# This module provides the ui and server for everything on the trends over time tab
+# Plots are labelled left to right and top to bottom
 
 overtimeTabUI <- function(id) {
   ns <- NS(id)
@@ -20,19 +20,19 @@ overtimeTabUI <- function(id) {
           )
         )),
         column(width = 12,    fluidRow(
-          column(width = 4, plotlyOutput(ns("plot1"))),
-          column(width = 4, plotlyOutput(ns("plot2"))), 
-          column(width = 4, plotlyOutput(ns("plot2a")))
+          column(width = 4, plotlyOutput(ns("total_sp_nv_kc"))),
+          column(width = 4, plotlyOutput(ns("online_retailer"))), 
+          column(width = 4, plotlyOutput(ns("category_sp_nv")))
         ))),
    fluidRow(box(width = 12,
         fluidRow(
-          column(width = 6, plotlyOutput(ns("plot3"))),
-          column(width = 6, plotlyOutput(ns("plot4")))
+          column(width = 6, plotlyOutput(ns("nv_simd"))),
+          column(width = 6, plotlyOutput(ns("nv_promo")))
         )),
     
                box(width = 12,
-                   column(width = 6, plotlyOutput(ns("plot5"))),
-                   column(width = 6, plotlyOutput(ns("plot6"))),
+                   column(width = 6, plotlyOutput(ns("nutrients"))),
+           #        column(width = 6, plotlyOutput(ns("plot6"))),
              )
   ))
 }
@@ -44,7 +44,12 @@ overtimeTabUI <- function(id) {
 
 overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, category) {
   moduleServer(id, function(input, output, session) {
+  
     
+
+# Plot 1 - average annual spend on retail food and drink per capit --------
+
+      
     
     output$spend_pppd <- renderPlotly({
       
@@ -62,7 +67,11 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
       
     })
     
-    
+  
+
+# Plot 2 - kcal per capita per day  ---------------------------------------
+
+      
     output$kcal_pppd <- renderPlotly({
       
       p8 <- totals_pppd %>%
@@ -79,6 +88,9 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
     
     
     
+
+# Plot 3 - trips per household --------------------------------------------
+
     
     output$trips <- renderPlotly({
       
@@ -89,7 +101,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
         geom_col(color = "#babd8b", fill = "#babd8b") +
         theme_classic() +
         labs(y = "Number of trips per household", 
-             title = "Average number of annual retail food and drink trips\nper househould in Scotland")
+             title = "Average number of annual retail food and drink trips\nper household in Scotland")
       
       ggplotly(p5)
       
@@ -97,8 +109,13 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
     })
     
  
+
+
+# Plot 4 - annual spend/kcal/nut vol on retail in Scotland  -------------------------------------
+
+      
     
-    output$plot1 <- renderPlotly({
+    output$total_sp_nv_kc <- renderPlotly({
       p1 <-   overall %>%
         filter(SIMD ==  "Total Household") %>% 
         mutate(Year = as.character(Year)) %>%
@@ -111,8 +128,14 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
              title = paste0("Total annual ", str_to_lower(input$metric), " purchased on retail food and drink in Scotland"))
       ggplotly(p1)
     })
+
     
-    output$plot2 <- renderPlotly({
+    
+
+# Plot 5 - spend/kcal/nut vol by retailer type online  --------------------
+
+        
+    output$online_retailer <- renderPlotly({
       p2 <- online %>%
         filter(`Promotion Type` == "Total ONLINE") %>%
         filter(`Retailer Type` != "Total Market") %>%
@@ -129,13 +152,21 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
     })
     
     
+
     
-    output$plot2a <- renderPlotly({
+
+# Plot 6 - spend/nut vol by category (meat, fish, veg, discretionary, additional) --------------------------------------
+
+        
+    output$category_sp_nv <- renderPlotly({
       
-      var_name <- if_else( input$metric == "Energy kcal", 
-                           paste0(input$metric), 
-        paste0(input$metric, " %"))
+
+    # Figures for percentage kcal are not available - can be calculated but placed as a low priority development for now
+      validate(
+        need(input$metric != "Energy kcal", " ")
+      )
       
+      var_name <- paste0(input$metric, " %")
       
       category %>% 
         filter(SIMD == "Total Household") %>%
@@ -157,8 +188,12 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
     })
     
     
-    
-    output$plot3 <- renderPlotly({
+
+# Plot 7 - NV purchased on price promotion by SIMD --------------------------------
+
+
+        
+    output$nv_simd <- renderPlotly({
       
       
       promotype %>%
@@ -176,13 +211,17 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
         layout(title = list(text = paste0("Total annual retail purchase of food and drink purchased on price promotion in Scotland,\nby SIMD"), 
                             xanchor = "left", 
                             x = 0), 
-               yaxis = list(title = "Percentage volume purchased on promotion (%)"))
+               yaxis = list(title = "Percentage nutritional volume purchased on promotion (%)"))
       
     })
     
     
-    
-    output$plot4 <- renderPlotly({
+  
+
+# Plot 8 - NV on price promo by promo type --------------------------------
+
+      
+    output$nv_promo <- renderPlotly({
       
       promotype %>%
         filter(SIMD ==  "Total Household", 
@@ -204,10 +243,14 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
     })
     
     
+  
+
+# Plot 9 - key nutrients per capita per day  ------------------------------
+
     
     
     
-    output$plot5 <- renderPlotly({
+    output$nutrients <- renderPlotly({
       
       
       
