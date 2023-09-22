@@ -13,7 +13,8 @@ library(lubridate)
 library(scales)
 library(sgplot)
 library(shinyalert)
-
+library(officer)
+library(rvg)
 # read in theme and modules
 options(scipen = 999)
 source("scripts/dashboard_theme.R")
