@@ -25,7 +25,9 @@ dashboard_pckgs <- c(
   "lubridate",
   "scales",
   "sgplot",
-  "shinyalert"
+  "shinyalert", 
+  "officer", 
+  "rvg"
 
 )
 
