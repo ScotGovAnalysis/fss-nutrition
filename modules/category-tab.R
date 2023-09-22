@@ -35,8 +35,9 @@ categoryTabUI <- function(id){
              label = "Select categories for the plot: ", 
              choices = unique(category$`F&D Category`)
            ), 
-           checkboxInput(ns("bar"), 'Select/deselect all') 
-           #   actionButton(ns("generate"), label = "Generate plot")
+           checkboxInput(ns("bar"), 'Select/deselect all'), 
+           downloadButton(ns("slide"),
+                            HTML("&nbsp;&nbsp;Generate slides"))
     )
     
     
@@ -66,10 +67,9 @@ categoryTabServer <- function(id, data_promo, data_simd) {
                  
                  
                  
-                 output$plot1 <- renderPlot({
-                   
 
 
+        cat_plot <- reactive({
 # SIMD plot ---------------------------------------------------------------
 
                  # For the SIMD plot there cannot be more than 8 categories selected
@@ -145,9 +145,39 @@ categoryTabServer <- function(id, data_promo, data_simd) {
                    
                    
                  })
+        
+        
+        output$plot1 <- renderPlot({
+          cat_plot()
+        })
+        
                  
+        
+        pptx_document <- reactive({
+          g1_dml <- dml(ggobj = cat_plot())
+          officer::read_pptx() %>%
+            # add slide ----
+          officer::add_slide() %>%
+            # specify object and location of object ----
+          officer::ph_with(g1_dml, ph_location("body", left = 1, top = 1, width = 10, height = 8) )
+          
+        })
                  
-                 
+        output$slide <- downloadHandler(
+          
+          filename = function(){
+            paste0("Kantar category dashboard output.pptx")},
+          content = function(file) {
+
+            
+         pptx_document() %>%
+              # export slide -----
+            base::print(target = file)
+            
+            
+            
+          }
+        )             
                  
                  
                  
