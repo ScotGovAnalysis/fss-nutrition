@@ -20,9 +20,9 @@ overtimeTabUI <- function(id) {
           )
         )),
         column(width = 12,    fluidRow(
-          column(width = 4, plotlyOutput(ns("total_sp_nv_kc"))),
+          column(width = 3, plotlyOutput(ns("total_sp_nv_kc"))),
           column(width = 4, plotlyOutput(ns("online_retailer"))), 
-          column(width = 4, plotlyOutput(ns("category_sp_nv")))
+          column(width = 5, plotlyOutput(ns("category_sp_nv")))
         ))),
    fluidRow(box(width = 12,
         fluidRow(
@@ -125,7 +125,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
         scale_y_continuous(labels = unit_format(unit = "M", scale = 1e-6)) +
         theme_classic() +
         labs(y = input$metric, 
-             title = paste0("Total annual ", str_to_lower(input$metric), " purchased on retail food and drink in Scotland"))
+             title = str_wrap(paste0("Total annual ", str_to_lower(input$metric), " purchased on retail food and drink in Scotland"), 45))
       ggplotly(p1)
     })
 
@@ -146,7 +146,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
         scale_y_continuous(labels = unit_format(unit = "M", scale = 1e-6)) +
         theme_classic() +
         labs(y = input$metric, 
-             title = paste0("Total annual online ", str_to_lower(input$metric),  " purchased on food and drink, by retailer type, in Scotland" ))
+             title = str_wrap(paste0("Total annual online ", str_to_lower(input$metric),  " purchased on food and drink, by retailer type, in Scotland" ), 45))
       ggplotly(p2)
       
     })
@@ -174,15 +174,25 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
         filter(food_groups != "Other") %>%
         group_by(food_groups, Year) %>%
         summarise(var_name := sum(get(var_name))) %>%
-        plot_ly(x = ~Year,  
-                y = ~var_name, 
-                color = ~ food_groups, 
-                type = "scatter", 
-                mode = "lines", 
-                colors = c( "#12436D","#28A197","#801650" ,
-                            "#F46A25","#3D3D3D" )) %>%
-        layout(title = paste0("Annual retail purchase of food and drink categories as a\npercentage of total annual ", str_to_lower(input$metric)),
-               yaxis = list(title = "% of total food and drink"))
+        # plot_ly(x = ~Year,  
+        #         y = ~var_name, 
+        #         color = ~ food_groups, 
+        #         type = "scatter", 
+        #         mode = "lines", 
+        #         colors = c( "#12436D","#28A197","#801650" ,
+        #                     "#F46A25","#3D3D3D" )) %>%
+        # layout(title = paste0("Annual retail purchase of food and drink categories as a\npercentage of total annual ", str_to_lower(input$metric)),
+        #        yaxis = list(title = "% of total food and drink"))
+        # 
+      
+      ggplot() +
+        aes(x = Year, y = var_name, color = food_groups, group = food_groups) +
+        geom_line() +
+        scale_colour_discrete_sg("main6", palette_type = "af", name = " " ) +
+        theme_classic() +
+        labs(y = "Percentage of total food and drink (%)", 
+             title = paste0("Annual retail purchase of food and drink categories as a\npercentage of total annual ", str_to_lower(input$metric)))
+      
       
       
     })
@@ -195,23 +205,37 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
         
     output$nv_simd <- renderPlotly({
       
-      
+      # 
+      # promotype %>%
+      #   mutate(Year = as.character(Year)) %>%
+      #   filter(SIMD != "No SIMD") %>%
+      #   filter(`Promotion type` == "On Promotion") %>%
+      #   plot_ly(x = ~Year, 
+      #           y = ~`Nutritional Volume %`, 
+      #           color = ~ SIMD, 
+      #           type = "scatter", 
+      #           mode = "lines",
+      #           colors = c( "#12436D","#28A197","#801650" ,
+      #                                        "#F46A25","#3D3D3D","#A285D1",
+      #                                        "#2073BC" ))%>%
+      #   layout(title = list(text = paste0("Total annual retail purchase of food and drink purchased on price promotion in Scotland,<br />by SIMD <br />"), 
+      #                        x = 0, y = 1.2), 
+      #          yaxis = list(title = "Percentage nutritional volume purchased on promotion (%)"), 
+      #          margin = list(t = 100))
+      # 
       promotype %>%
         mutate(Year = as.character(Year)) %>%
         filter(SIMD != "No SIMD") %>%
         filter(`Promotion type` == "On Promotion") %>%
-        plot_ly(x = ~Year, 
-                y = ~`Nutritional Volume %`, 
-                color = ~ SIMD, 
-                type = "scatter", 
-                mode = "lines",
-                colors = c( "#12436D","#28A197","#801650" ,
-                                             "#F46A25","#3D3D3D","#A285D1",
-                                             "#2073BC" ))%>%
-        layout(title = list(text = paste0("Total annual retail purchase of food and drink purchased on price promotion in Scotland,\nby SIMD"), 
-                            xanchor = "left", 
-                            x = 0), 
-               yaxis = list(title = "Percentage nutritional volume purchased on promotion (%)"))
+      ggplot() +
+        aes(x = Year, y = `Nutritional Volume %`, color = SIMD, group = SIMD) +
+        geom_line() +
+        scale_colour_discrete_sg("main6", palette_type = "af") +
+        theme_classic() +
+        labs(y = "Percentage nutritional volume\npurchased on promotion (%)", 
+             title = "Total annual retail purchase of food and drink purchased on price promotion in Scotland,<br />by SIMD <br />")
+      
+      
       
     })
     
@@ -236,7 +260,7 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
         scale_y_continuous(labels = scales::percent) +
         scale_fill_discrete_sg("main6", palette_type = "af") +
         theme_classic() +
-        labs(y = "Percentage volume purchased on promotion (%)", 
+        labs(y = "Percentage nutritional volume\npurchased on promotion (%)", 
              title = "Total annual retail purchase of food and drink purchased on price promotion\nin Scotland, by promotion type")
       
       
@@ -252,25 +276,44 @@ overtimeTabServer <- function(id, overall, promotype, online, totals_pppd, categ
     
     output$nutrients <- renderPlotly({
       
-      
-      
-      totals_pppd %>% 
+      dat <-       totals_pppd %>% 
         select(Year, `Energy kcal`:`Sodium g`) %>% 
         pivot_longer(`Energy kcal`:`Sodium g`, names_to = "Nutrient") %>% 
         filter(Nutrient != "Energy kcal") %>%
-        mutate(Year = as.character(Year)) %>%
-        plot_ly(x = ~Year, 
-                y = ~value, 
-                color = ~ Nutrient, 
-                type = "scatter", 
-                mode = "lines",
-                colors = c( "#12436D","#28A197","#801650" ,
-                             "#F46A25","#3D3D3D","#A285D1",
-                             "#2073BC" )) %>%
-        layout(title = "Average annual retail purchase of key nutrients, per capita, per day in Scotland",
-               yaxis = list(title = "Grams (g)"))
+        mutate(Year = as.character(Year))
       
+      ann_labs <- dat %>%
+        group_by(Nutrient) %>%
+        mutate(min_year = min(Year)) %>%
+        filter(Year == max(Year))
       
+      dat %>%
+        # plot_ly(x = ~Year, 
+        #         y = ~value, 
+        #         color = ~ Nutrient, 
+        #         type = "scatter", 
+        #         mode = "lines",
+        #         colors = c( "#12436D","#28A197","#801650" ,
+        #                      "#F46A25","#3D3D3D","#A285D1",
+        #                      "#2073BC" )) %>%
+        # layout(title = "Average annual retail purchase of key nutrients, per capita, per day in Scotland",
+        #        yaxis = list(title = "Grams (g)"))
+      
+      ggplot() +
+        aes(x = Year, y = value, color = Nutrient, group = Nutrient) +
+        geom_line() +
+        scale_colour_manual(values = c( "#12436D","#28A197","#801650" ,
+                                                                "#F46A25","#3D3D3D","#A285D1",
+                                                                "#2073BC" )) +
+        theme_classic() +
+        labs(y = "Grams (g)", 
+             title =  "Average annual retail purchase of key nutrients, per capita, per day in Scotland") 
+     #   geom_label(data = ann_labs, aes(x = Year, y = value, label = Nutrient, color = Nutrient), hjust = 0, vjust = 0.5, nudge_x = 0.1, label.size = NA)+
+     #   scale_x_discrete(expand = c(0, 2)) +
+      #  theme(legend.position = "none")
+      
+        
+        ########################################### COLOR PALETTE! Fix this. 
     })
     
     
