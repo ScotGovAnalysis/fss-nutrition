@@ -130,7 +130,7 @@ categoryTabServer <- function(id, data_promo, data_simd) {
                        ggplot() +
                        aes(x = !!as.symbol(input$xaxis), y =`F&D Category`, fill = col_fill ) +
                        geom_col(width = 0.8) +
-                       theme_classic()+
+                       theme_classic(base_size = 19)+
                        scale_fill_discrete_sg("focus")+
                        labs(x = ifelse(input$xaxis == "NutritionalVolume", "Nutritional volume", "Percentage of total (%)"),
                             title = plot_title, 
